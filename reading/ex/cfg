@@ -1,0 +1,2 @@
+set yrange[-5:5]
+plot 'mydata.dat' using 1:2 with lines
