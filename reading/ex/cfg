@@ -1,1 +1,1 @@
-plot 'mydata.dat' using 1:2 with lines
+plot 'mydata.dat' binary record=(10000) format='%float' using 1:2 with lines
