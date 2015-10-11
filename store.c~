@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void){
+
+  int length = 160;
+  char* fileName = "testFile.dat";
+
+  // Write data to file
+
+  FILE* file = fopen (fileName, "wb");
+
+  for(int i = 0; i< length; i++){
+    // We are just storing the indices, so value at i is equal to i
+    float f = (float) i;
+    fwrite(&f, sizeof(float), 1, file);
+  }
+
+  fclose(file);
+
+  // Read data from file into results array
+
+  file = fopen(fileName, "rb");
+
+  float* results = new float[length];
+
+  for(int i = 0; i< length; i++){
+    float f;
+    fread(&f, sizeof(float), 1, file);
+    results[i] = f;
+  }
+
+  fclose(file);
+
+  // Now check data in results array
+
+  bool fail = false;
+
+  for(int i = 0; i< length; i++){
+    if(results[i]!=(float)i){
+      fail = true; // This should not be hit, but it is!
+    }
+  }
+
+  delete [] results;
+}
