@@ -12,10 +12,9 @@ int main(void){
   FILE* file = fopen (fileName, "wb");
 
   for(int i = 0; i< length; i++){
-    m[i][0] = m[i][1] = 1;
+    m[i][0] = m[i][1] = 1.0;
   }
   
   fwrite(m, sizeof(float), 100*2, file);
   fclose(file);
-
 }
