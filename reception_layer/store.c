@@ -19,7 +19,7 @@ int main(void){
   bcm2835_spi_begin();
   bcm2835_spi_setBitOrder(BCM2835_SPI_BIT_ORDER_MSBFIRST);      // The default
   bcm2835_spi_setDataMode(BCM2835_SPI_MODE0);                   // The default
-  bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_8);// The default
+  bcm2835_spi_setClockDivider(BCM2835_SPI_CLOCK_DIVIDER_16);// The default
   bcm2835_spi_chipSelect(BCM2835_SPI_CS0);                      // The default
   bcm2835_spi_setChipSelectPolarity(BCM2835_SPI_CS0, LOW);      // the default
 
@@ -39,8 +39,10 @@ int main(void){
     puts("Recebidos! Iniciando processamento");
     // Processa dados
     for(i = 0; i<DATA_L; i++){
-      m[i][1] = (((float)(rec_buf[2*i]<<2 +(rec_buf[2*i+1])>>6))/102.3) - 5.0; // Agregacao 10bits + interpolacao (y=10k/1023 -5)  
-//      printf("(rcv:snd): (%d:%d) - (%d:%d)\n", (rec_buf[2*i]), snd_buf[2*i], (rec_buf[2*i+1]), snd_buf[2*i+1]);
+     // m[i][1] = (((float)(rec_buf[2*i]<<2 +(rec_buf[2*i+1])>>6))/102.3) - 5.0; // Agregacao 10bits + interpolacao (y=10k/1023 -5)  
+      m[i][1] = (((float)(rec_buf[2*i]<<8 +(rec_buf[2*i+1])))/102.3) - 5.0; // Agregacao 10bits + interpolacao (y=10k/1023 -5)  
+//      printf("(rcv:snd): (%x:%d) - (%x:%d)\n", (rec_buf[2*i]), snd_buf[2*i], (rec_buf[2*i+1]), snd_buf[2*i+1]);
+//      printf("m: %f\n", m[i][1]);
     }
 
     puts("Salvando arquivo...");
@@ -49,7 +51,7 @@ int main(void){
     fwrite(m, sizeof(float), DATA_L*2, file);
     fclose(file);
     puts("Completed!.");
-    break; // TODO: Tirar
+//    break; // TODO: Tirar
   }
   return 0;
 }
