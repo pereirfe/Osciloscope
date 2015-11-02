@@ -3,7 +3,8 @@
 #include <stdint.h>
 #include <bcm2835.h>
 
-#define DATA_L 100000
+//#define DATA_L 100000
+#define DATA_L 10
 
 int main(void){
 
@@ -11,6 +12,7 @@ int main(void){
   float m[DATA_L][2];
   uint8_t rec_buf[2*DATA_L], snd_buf[2*DATA_L]; 
   int i;
+  int k;
   float data;
   // Write data to file
 
@@ -39,10 +41,11 @@ int main(void){
     puts("Recebidos! Iniciando processamento");
     // Processa dados
     for(i = 0; i<DATA_L; i++){
-     // m[i][1] = (((float)(rec_buf[2*i]<<2 +(rec_buf[2*i+1])>>6))/102.3) - 5.0; // Agregacao 10bits + interpolacao (y=10k/1023 -5)  
-      m[i][1] = (((float)(rec_buf[2*i]<<8 +(rec_buf[2*i+1])))/102.3) - 5.0; // Agregacao 10bits + interpolacao (y=10k/1023 -5)  
-//      printf("(rcv:snd): (%x:%d) - (%x:%d)\n", (rec_buf[2*i]), snd_buf[2*i], (rec_buf[2*i+1]), snd_buf[2*i+1]);
-//      printf("m: %f\n", m[i][1]);
+      k = rec_buf[2*i]; 
+      k = k<<6 + rec_buf[2*i+1];
+      m[i][1] = ((float)k)/102.3 - 5.0;
+//      m[i][1] = (((float)(rec_buf[2*i]<<2 +(rec_buf[2*i+1])>>6))/102.3) - 5.0; // Agregacao 10bits + interpolacao (y=10k/1023 -5)  
+      printf("(rcv:snd): (%d:%d) - (%d:%d)\n", (rec_buf[2*i]), snd_buf[2*i], (rec_buf[2*i+1]), snd_buf[2*i+1]);
     }
 
     puts("Salvando arquivo...");
